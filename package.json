@@ -1,0 +1,19 @@
+{
+  "name": "freela-coisinha",
+  "version": "1.0.0",
+  "description": "",
+  "main": "rommanelb2c.institucional-encontrar-loja.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bonny5171/Encontrea-a-loja-Rommane.git"
+  },
+  "author": "Ibonny, Lost",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bonny5171/Encontrea-a-loja-Rommane/issues"
+  },
+  "homepage": "https://github.com/Bonny5171/Encontrea-a-loja-Rommane#readme"
+}
