@@ -4,7 +4,8 @@
   "description": "",
   "main": "rommanelb2c.institucional-encontrar-loja.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Bonny5171/Encontrea-a-loja-Rommane/issues"
   },
-  "homepage": "https://github.com/Bonny5171/Encontrea-a-loja-Rommane#readme"
+  "homepage": "https://github.com/Bonny5171/Encontrea-a-loja-Rommane#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }
