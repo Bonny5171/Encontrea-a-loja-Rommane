@@ -28,7 +28,7 @@ function initMap(lat, lng) {
     var marker = new google.maps.Marker({
         position: new google.maps.LatLng(lat, lng),
         map: map,
-        icon: "/arquivos/pin.png"
+        icon: "pin.png"
     });
 }
     
