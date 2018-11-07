@@ -1,3 +1,5 @@
+var API_KEY = 'AIzaSyCuTTC7TWNKkPCTOGW8XMY67S8Cy_bQDsI';
+
 // função para inicializar o google map
 function initMap(lat, lng) {
 
@@ -28,7 +30,7 @@ function initMap(lat, lng) {
     var marker = new google.maps.Marker({
         position: new google.maps.LatLng(lat, lng),
         map: map,
-        icon: "pin.png"
+        icon: "/static/pin.png"
     });
 }
     
@@ -112,14 +114,21 @@ var managerMap = function () {
                 
                 // colocando resultados encontrados no form
                 self.setFormInfo(self._mdResponseData.estado[0].cidade[0].local[0]);
+                
+                var endereco = self._mdResponseData.estado[0].cidade[0].local[0].numero + ' '
+                    + self._mdResponseData.estado[0].cidade[0].local[0].endereco + ' '
+                    + self._mdResponseData.estado[0].cidade[0].local[0].cidade + ' '
+                    + self._mdResponseData.estado[0].cidade[0].local[0].estado;
 
-                // iniciando mapa com dados default
-                initMap(self._mdResponseData.estado[0].cidade[0].local[0].latitude, self._mdResponseData.estado[0].cidade[0].local[0].longitude);
+                self.getLatLong(endereco, function(cbData) {
+                    // iniciando mapa com dados default
+                    initMap(cbData.lat, cbData.lng);
 
-                self.addListState(); // lista todos os estados no <select>
-                self.addListCity(0); // lista todas as cidades do estado padrão de inicialização, no caso 0
-                self.addListLocal(0, 0, 0); // lista todos os locais da cidade padrão de inicialização, no caso 0
+                    self.addListState(); // lista todos os estados no <select>
+                    self.addListCity(0); // lista todas as cidades do estado padrão de inicialização, no caso 0
+                    self.addListLocal(0, 0, 0); // lista todos os locais da cidade padrão de inicialização, no caso 0
 
+                });
             }   
 
             
@@ -150,6 +159,22 @@ var managerMap = function () {
             self.addListState(0); // inforando primeira cidade da lista do primeiro estado // local esta atrelado e sera alterado automaticamente
         });
 
+    }
+
+    // pegando o lat e long by address
+    this.getLatLong = function (address, callback) {
+        var http = new XMLHttpRequest();
+        http.open("GET", "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + API_KEY);
+        http.onload = function () {
+            var res = JSON.parse(http.responseText);
+
+            if (res.status === "OK") {
+                callback(res.results[0].geometry.location);
+            }
+        }
+
+        // enviando requisição
+        http.send();
     }
 
     // pegando locais no master data
