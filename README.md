@@ -17,7 +17,7 @@ below.
 
     $ git clone https://github.com/Bonny5171/Encontrea-a-loja-Rommane.git
     $ cd Encontrea-a-loja-Rommane
-    $ npm install
+    $ npm i
 
 ### Configure app
 
@@ -28,6 +28,9 @@ Copiar exemplo default:
 ## Start & watch
 
     $ npm start
+    
+    Servidor default na porta "3000" pode ser trocado no arquivo app.js na raiz da aplicação.
+    http://localhost:3000/
 
 ### JavaScript
 
