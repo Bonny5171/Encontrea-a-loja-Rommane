@@ -130,14 +130,14 @@ var managerMap = function () {
 
     // adicionando evento "change" na lista de cidades
     this._selectCity.addEventListener("change", function () {
-      var stateSelectedIndex = self._selectState.options.selectedIndex;
+      var stateSelectedIndex = self._selectState.options.selectedIndex - 1;
       self.addListLocal(stateSelectedIndex, this.value, 0);
     });
 
     // adicionando evento "change" na lista de locais
     this._selectLocal.addEventListener("change", function () {
-      var stateSelectedIndex = self._selectState.options.selectedIndex;
-      var citySelectedIndex  = self._selectCity.options.selectedIndex;
+      var stateSelectedIndex = self._selectState.options.selectedIndex - 1;
+      var citySelectedIndex  = self._selectCity.options.selectedIndex - 1;
       self.addListLocal(stateSelectedIndex, citySelectedIndex, this.value);
     });
 
@@ -307,8 +307,8 @@ this.buildDataResponse = function (data) {
     });
 
     // atualiza a lista de cidades com estado atrelado
-    // var stateSelectedIndex = this._selectState.options.selectedIndex;
-    // this.addListCity(stateSelectedIndex);
+    var stateSelectedIndex = this._selectState.options.selectedIndex - 1;
+    this.addListCity(stateSelectedIndex);
   }
 
   // adiciona cidades no <select>
@@ -331,15 +331,15 @@ this.buildDataResponse = function (data) {
     });
 
     // atualiza a lista de locais atrelados a cidade
-    var stateSelectedIndex = this._selectState.options.selectedIndex;
-    var citySelectedIndex  = this._selectCity.options.selectedIndex;
-    this.addListLocal(stateSelectedIndex, citySelectedIndex, 0);
+    var stateSelectedIndex = this._selectState.options.selectedIndex - 1;
+    var citySelectedIndex  = this._selectCity.options.selectedIndex - 1;
+    this.addListLocal(stateSelectedIndex, citySelectedIndex, 1);
   }
 
   // adiciona locais no <select>
   this.addListLocal = function (indexState, indexCity, localSelected) {
     // limpando lista de locais
-    this._selectLocal.innerHTML = '<option selected="">Selecione</option>';
+    this._selectLocal.innerHTML = '';
 
     // persistindo escopo
     var self = this;
