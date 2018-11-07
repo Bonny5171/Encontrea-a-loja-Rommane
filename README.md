@@ -30,7 +30,7 @@ Copiar exemplo default:
     $ npm start
     
     Servidor default na porta "3000" pode ser trocado no arquivo app.js na raiz da aplicação.
-    http://localhost:3000/
+    [http://localhost:3000/](http://localhost:3000/)
 
 ### JavaScript
 
