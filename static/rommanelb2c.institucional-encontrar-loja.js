@@ -119,6 +119,9 @@ var managerMap = function () {
           self.addListCity(0); // lista todas as cidades do estado padrão de inicialização, no caso 0
           self.addListLocal(0, 0, 0); // lista todos os locais da cidade padrão de inicialização, no caso 0
         });
+
+        // Limpa dados do endereço quando muda o Estado
+        $('#f_cidade-b2c, #f_local-b2c, #f_elemento__end-b2c, #f_elemento__comp-b2c, #f_elemento__tel-b2c').text('');
       } 
     });
 
@@ -369,6 +372,9 @@ this.buildDataResponse = function (data) {
 
       // atualizando informações do form
       self.setFormInfo(iLocal);
+
+      // Remove imagem tampão
+      $('#tampao').fadeOut(500);
     });      
   }
 }
