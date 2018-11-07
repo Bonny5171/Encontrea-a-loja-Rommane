@@ -307,15 +307,15 @@ this.buildDataResponse = function (data) {
     });
 
     // atualiza a lista de cidades com estado atrelado
-    var stateSelectedIndex = this._selectState.options.selectedIndex;
-    this.addListCity(stateSelectedIndex);
+    // var stateSelectedIndex = this._selectState.options.selectedIndex;
+    // this.addListCity(stateSelectedIndex);
   }
 
   // adiciona cidades no <select>
   this.addListCity = function (indexState) {
     
     // limpando lista de cidades
-    this._selectCity.innerHTML = '';
+    this._selectCity.innerHTML = '<option selected="">Selecione</option>';
 
     // persistindo escopo
     var self = this;
@@ -339,7 +339,7 @@ this.buildDataResponse = function (data) {
   // adiciona locais no <select>
   this.addListLocal = function (indexState, indexCity, localSelected) {
     // limpando lista de locais
-    this._selectLocal.innerHTML = '';
+    this._selectLocal.innerHTML = '<option selected="">Selecione</option>';
 
     // persistindo escopo
     var self = this;
