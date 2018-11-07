@@ -157,7 +157,9 @@ var managerMap = function () {
 
         // iniciando uma obj http
         var http = new XMLHttpRequest();
-        http.open("GET", "http://api.vtex.com.br/rommanel/dataentities/EL/search?_fields=cep,cidade,endereco,estado,complemento,latitude,local,longitude,numero,telefone");
+        // http.open("GET", "http://api.vtex.com.br/rommanel/dataentities/EL/search?_fields=cep,cidade,endereco,estado,complemento,latitude,local,longitude,numero,telefone");
+        http.overrideMimeType("application/json");
+        http.open("GET", "/static/lojas.json");
         http.setRequestHeader("REST-Range", "resources=0-5000");
         
         http.onload = function () {
