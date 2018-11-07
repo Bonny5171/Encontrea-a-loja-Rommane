@@ -163,13 +163,17 @@ var managerMap = function () {
 
     // pegando o lat e long by address
     this.getLatLong = function (address, callback) {
+        console.log('buscando...');
         var http = new XMLHttpRequest();
         http.open("GET", "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + API_KEY);
         http.onload = function () {
             var res = JSON.parse(http.responseText);
 
             if (res.status === "OK") {
+                console.log('LATITUDE E LONGITUDE ENCONTRADA COM SUCESSO!', res.results[0].geometry.location);
                 callback(res.results[0].geometry.location);
+            } else {
+                console.log("ERRO AO BUSCAR LAT E LONG DO END: https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + API_KEY);
             }
         }
 
@@ -219,15 +223,9 @@ var managerMap = function () {
         this._elementoTel.textContent = "Telefone: " + local.telefone;
         this._elementoComp.textContent = ", " + local.complemento;
 
-        console.log('sou complemento ' + local.complemento);
-
-        //$( "#f_elemento__comp-b2c:contains('null')" ).css( "display", "none" );
-
         if ( local.complemento === null ) {
-            console.log('sou null');
             this._elementoComp.textContent = " ";
         }else{
-            console.log('não sou null');
             this._elementoComp.textContent = ", " + local.complemento;
         }
 
@@ -418,12 +416,20 @@ var managerMap = function () {
         // pegando local selecionado
         var iLocal = this._mdResponseData.estado[indexState].cidade[indexCity].local[localSelected];
 
+        var endereco = iLocal.numero + ' '
+            + iLocal.endereco + ' '
+            + iLocal.cidade + ' '
+            + iLocal.estado;
+
         // atualizando mapa de acordo com o local informado
-        initMap(iLocal.latitude, iLocal.longitude);
+        self.getLatLong(endereco, function(cbData) {
+            initMap(cbData.lat, cbData.lng);
 
-        // atualizando informações do form
-        this.setFormInfo(iLocal);
+            // atualizando informações do form
+            self.setFormInfo(iLocal);
 
+        });
+        
     }
 
 }
