@@ -293,7 +293,7 @@ this.buildDataResponse = function (data) {
   }
 
   this.addListState = function () {      
-    this._selectState.innerHTML = '';
+    this._selectState.innerHTML = '<option selected="">Selecione</option>';
 
     var self = this;
 
