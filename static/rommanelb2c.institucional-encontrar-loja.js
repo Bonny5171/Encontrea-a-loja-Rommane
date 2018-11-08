@@ -106,6 +106,7 @@ var managerMap = function () {
         // colocando resultados encontrados no form
         self.setFormInfo(self._mdResponseData.estado[0].cidade[0].local[0]);
         
+        /*
         var endereco = self._mdResponseData.estado[0].cidade[0].local[0].numero + ' '
           + self._mdResponseData.estado[0].cidade[0].local[0].endereco + ' '
           + self._mdResponseData.estado[0].cidade[0].local[0].cidade + ' '
@@ -113,12 +114,13 @@ var managerMap = function () {
 
         self.getLatLong(endereco, function(cbData) {
           // iniciando mapa com dados default
-          initMap(cbData.lat, cbData.lng);
-
-          self.addListState(); // lista todos os estados no <select>
-          self.addListCity(0); // lista todas as cidades do estado padrão de inicialização, no caso 0
-          self.addListLocal(0, 0, 0); // lista todos os locais da cidade padrão de inicialização, no caso 0
+          initMap(cbData.lat, cbData.lng);          
         });
+        */
+
+        self.addListState(); // lista todos os estados no <select>
+        self.addListCity(0); // lista todas as cidades do estado padrão de inicialização, no caso 0
+        //self.addListLocal(0, 0, 0); // lista todos os locais da cidade padrão de inicialização, no caso 0
 
         // Limpa dados do endereço quando muda o Estado
         $('#f_cidade-b2c, #f_local-b2c, #f_elemento__end-b2c, #f_elemento__comp-b2c, #f_elemento__tel-b2c').text('');
@@ -310,8 +312,12 @@ this.buildDataResponse = function (data) {
     });
 
     // atualiza a lista de cidades com estado atrelado
-    var stateSelectedIndex = this._selectState.options.selectedIndex - 1;
-    this.addListCity(stateSelectedIndex);
+    if (this._selectState.options.selectedIndex == 0) {
+      console.log('não faça nada...')
+    }
+    else{
+      this.addListCity(this._selectState.options.selectedIndex - 1);
+    }
   }
 
   // adiciona cidades no <select>
@@ -336,7 +342,13 @@ this.buildDataResponse = function (data) {
     // atualiza a lista de locais atrelados a cidade
     var stateSelectedIndex = this._selectState.options.selectedIndex - 1;
     var citySelectedIndex  = this._selectCity.options.selectedIndex - 1;
-    this.addListLocal(stateSelectedIndex, citySelectedIndex, 1);
+
+    if (indexState == 0) {
+      console.log('não faça nada...');
+    }
+    else {
+      this.addListLocal(stateSelectedIndex, citySelectedIndex, 1);
+    }    
   }
 
   // adiciona locais no <select>
@@ -347,6 +359,9 @@ this.buildDataResponse = function (data) {
     // persistindo escopo
     var self = this;
 
+    if (indexCity == -1)
+     return;
+     
     this._mdResponseData.estado[indexState].cidade[indexCity].local.forEach(function (e, i) {      
       var option = document.createElement("option"); // criando elemento option
       option.value = i; // inserindo valor no option
