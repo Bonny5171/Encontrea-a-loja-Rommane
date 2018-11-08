@@ -55,6 +55,9 @@ var managerMap = function () {
   this.init = function () {
     var self = this;
 
+    // load
+    this.f_load = document.getElementById("f_load");
+
     // pegando elemento <select>[name=select-state]
     this._selectState = document.getElementsByName('select-state-b2c')[0];
     
@@ -103,22 +106,7 @@ var managerMap = function () {
           return a.nome < b.nome ? -1 : a.nome > b.nome ? 1 : 0;
         });
         
-        // colocando resultados encontrados no form
-        self.setFormInfo(self._mdResponseData.estado[0].cidade[0].local[0]);
-        
-        var endereco = self._mdResponseData.estado[0].cidade[0].local[0].numero + ' '
-          + self._mdResponseData.estado[0].cidade[0].local[0].endereco + ' '
-          + self._mdResponseData.estado[0].cidade[0].local[0].cidade + ' '
-          + self._mdResponseData.estado[0].cidade[0].local[0].estado;
-
-        self.getLatLong(endereco, function(cbData) {
-          // iniciando mapa com dados default
-          initMap(cbData.lat, cbData.lng);
-
-          self.addListState(); // lista todos os estados no <select>
-          self.addListCity(0); // lista todas as cidades do estado padrão de inicialização, no caso 0
-          self.addListLocal(0, 0, 0); // lista todos os locais da cidade padrão de inicialização, no caso 0
-        });
+        self.addListState();
       } 
     });
 
@@ -126,25 +114,56 @@ var managerMap = function () {
     // adicionando evento "chenge" na lista de estados
     this._selectState.addEventListener("change", function () {
       self.addListCity(this.value);
+
+      // limpando lista de locais
+      self._selectLocal.innerHTML = '<option selected="">Selecione</option>';
     });
 
     // adicionando evento "change" na lista de cidades
     this._selectCity.addEventListener("change", function () {
       var stateSelectedIndex = self._selectState.options.selectedIndex - 1;
       self.addListLocal(stateSelectedIndex, this.value, 0);
+      self.clearFormInfo();
     });
 
     // adicionando evento "change" na lista de locais
     this._selectLocal.addEventListener("change", function () {
+      
+      $('#f_load').show();
+      self.clearFormInfo();
+
       var stateSelectedIndex = self._selectState.options.selectedIndex - 1;
       var citySelectedIndex  = self._selectCity.options.selectedIndex - 1;
-      self.addListLocal(stateSelectedIndex, citySelectedIndex, this.value);
+
+      // pegando local selecionado
+      var iLocal = self._mdResponseData.estado[stateSelectedIndex].cidade[citySelectedIndex].local[this.value];
+
+      var endereco = iLocal.numero + ' '
+        + iLocal.endereco + ' '
+        + iLocal.cidade + ' '
+        + iLocal.estado;
+
+      // atualizando mapa de acordo com o local informado
+      self.getLatLong(endereco, function(cbData) {
+        initMap(cbData.lat, cbData.lng);
+
+        // Remove imagem tampão
+        $('#tampao').fadeOut(500);
+
+        // atualizando informações do form
+        self.setFormInfo(iLocal);
+        $('#f_load').hide();
+      });
     });
 
     // adicionando evento "click" no botão de refazer busca
     this._elementoResetarBusca.addEventListener("click", function () {
-      self._selectState.options[0].selected = true; // marcando primeiro estado da lista
+      self._selectState.innerHTML = '<option selected="">Selecione</option>';
+      self._selectCity.innerHTML = '<option selected="">Selecione</option>';
+      self._selectLocal.innerHTML = '<option selected="">Selecione</option>';
       self.addListState(0); // inforando primeira cidade da lista do primeiro estado // local esta atrelado e sera alterado automaticamente
+      self.clearFormInfo();
+      $('#tampao').fadeIn(500);
     });
   }
 
@@ -210,6 +229,15 @@ var managerMap = function () {
     }
   }
 
+   // clear from
+   this.clearFormInfo = function (local) {    
+    this._elementoCidade.textContent = '';
+    this._elementoLocal.textContent =  '';
+    this._elementoEnd.textContent = '';
+    this._elementoTel.textContent = '';
+    this._elementoComp.textContent = '';
+  }
+
   this.getIndex = function (search, arrayData) {      
     r = null;
     arrayData.forEach( function (e, i) {        
@@ -238,7 +266,7 @@ var managerMap = function () {
   }
 
   // constroi dados de retorno para o formulário de seleção no mapa
-this.buildDataResponse = function (data) {
+  this.buildDataResponse = function (data) {
     // persistindo escopo
     var self = this;
 
@@ -304,11 +332,7 @@ this.buildDataResponse = function (data) {
       option.textContent = e.nome;
 
       self._selectState.appendChild(option);
-    });
-
-    // atualiza a lista de cidades com estado atrelado
-    var stateSelectedIndex = this._selectState.options.selectedIndex - 1;
-    this.addListCity(stateSelectedIndex);
+    });    
   }
 
   // adiciona cidades no <select>
@@ -329,17 +353,12 @@ this.buildDataResponse = function (data) {
 
       self._selectCity.appendChild(option); // adicionando option na lista de cidades
     });
-
-    // atualiza a lista de locais atrelados a cidade
-    var stateSelectedIndex = this._selectState.options.selectedIndex - 1;
-    var citySelectedIndex  = this._selectCity.options.selectedIndex - 1;
-    this.addListLocal(stateSelectedIndex, citySelectedIndex, 1);
   }
 
   // adiciona locais no <select>
   this.addListLocal = function (indexState, indexCity, localSelected) {
     // limpando lista de locais
-    this._selectLocal.innerHTML = '';
+    this._selectLocal.innerHTML = '<option selected="">Selecione</option>';
 
     // persistindo escopo
     var self = this;
@@ -350,25 +369,6 @@ this.buildDataResponse = function (data) {
       option.textContent = e.local; // inserindo conteudo no option
 
       self._selectLocal.appendChild(option); // adicionando option na lista de cidades
-    });
-    
-    // persistindo local selecionado
-    this._selectLocal.options[localSelected].selected = true;
-
-    // pegando local selecionado
-    var iLocal = this._mdResponseData.estado[indexState].cidade[indexCity].local[localSelected];
-
-    var endereco = iLocal.numero + ' '
-      + iLocal.endereco + ' '
-      + iLocal.cidade + ' '
-      + iLocal.estado;
-
-    // atualizando mapa de acordo com o local informado
-    self.getLatLong(endereco, function(cbData) {
-      initMap(cbData.lat, cbData.lng);
-
-      // atualizando informações do form
-      self.setFormInfo(iLocal);
     });      
   }
 }
