@@ -324,7 +324,7 @@ this.buildDataResponse = function (data) {
     var self = this;
 
     // passando em todas as cidades
-    this._mdResponseData.estado[indexState].cidade.forEach(function (e, i) {
+    this._mdResponseData.estado[indexState + 1].cidade.forEach(function (e, i) {
       var option = document.createElement("option"); // criando elemento option
       option.dataset.indexstate = indexState; // adiciona indice do estado pai em data-indexstate
       option.value = i; // inserindo valor no option
@@ -347,7 +347,7 @@ this.buildDataResponse = function (data) {
     // persistindo escopo
     var self = this;
 
-    this._mdResponseData.estado[indexState].cidade[indexCity].local.forEach(function (e, i) {      
+    this._mdResponseData.estado[indexState + 1].cidade[indexCity + 1].local.forEach(function (e, i) {      
       var option = document.createElement("option"); // criando elemento option
       option.value = i; // inserindo valor no option
       option.textContent = e.local; // inserindo conteudo no option
@@ -359,7 +359,7 @@ this.buildDataResponse = function (data) {
     this._selectLocal.options[localSelected].selected = true;
 
     // pegando local selecionado
-    var iLocal = this._mdResponseData.estado[indexState].cidade[indexCity].local[localSelected];
+    var iLocal = this._mdResponseData.estado[indexState + 1].cidade[indexCity + 1].local[localSelected];
 
     var endereco = iLocal.numero + ' '
       + iLocal.endereco + ' '
